@@ -1,0 +1,108 @@
+image: php:7.2
+
+stages:
+  - package
+  - test
+  - build
+  - deploy
+
+packagingForTesting:
+  stage: package
+  image: composer:1.5.1
+  cache:
+    key: app
+    policy: push
+    paths:
+      - .
+  script:
+    - composer install
+    - cp .env.example .env
+
+unitaryTesting:
+  stage: test
+  image: osor1o/phpunit-alpine
+  cache:
+    key: app
+    policy: pull
+    paths:
+      - .
+  services:
+    - mariadb:10.2
+  variables:
+    MYSQL_DATABASE: homestead
+    MYSQL_USER: homestead
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_PASSWORD: secret
+    DB_DATABASE_TEST: homestead123
+  script:
+    - php artisan migrate:fresh
+    - vendor/bin/phpunit
+
+dependencySecurityTest:
+  stage: test
+  image: osor1o/snyk-alpine
+  script:
+    - snyk auth ${SNYK_AUTH_KEY}
+    - snyk test
+
+syntaxTesting:
+    stage: test
+    image: osor1o/phpunit-alpine
+    cache:
+      key: app
+      policy: pull
+      paths:
+      - .
+    script:
+      - vendor/bin/phpcs --standard=./phpcs.xml -d ./
+
+buildForDeploying:
+  stage: build
+  image: composer:1.5.1
+  cache:
+    key: app
+    paths:
+      - .
+  only:
+    - /^(master|develop)$/
+  script:
+    - composer install -o --no-dev
+
+deploymentInProduction:
+  stage: deploy
+  image: osor1o/ssh-alpine
+  only:
+    - master
+  cache:
+    key: app
+    policy: pull
+    paths:
+      - .
+  environment:
+    name: production
+    url: http://sistemavianova.com.br
+  script:
+    - echo 'hello to deploy'
+
+deploymentInStaging:
+  stage: deploy
+  image: osor1o/ssh-alpine
+  only:
+    - develop
+  cache:
+    key: app
+    policy: pull
+    paths:
+      - .
+  environment:
+    name: staging
+    url: ${URL_DEPLOY_STAGING}
+  variables:
+    SSHPASS_SCRIPT: sshpass -p ${PASSWORD_DEPLOY_STAGING}
+    SCP_SCRIPT: scp -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -P ${PORT_DEPLOY_STAGING} -r ./ ${USER_DEPLOY_STAGING}@${HOST_DEPLOY_STAGING}:${PATH_DEPLOY_STAGING}
+    SSH_SCRIPT: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p ${PORT_DEPLOY_STAGING} ${USER_DEPLOY_STAGING}@${HOST_DEPLOY_STAGING}
+  script:
+    - rm -rf phpcs.xml .env .env.example .git .gitignore .editorconfig .ci.yml .git public_html/.htaccess
+    - rm -rf storage tests resources database/factories database/seeds database/'diagrama conceitual.brM3'
+    - ${SSHPASS_SCRIPT} ${SCP_SCRIPT}
+    - ${SSHPASS_SCRIPT} ${SSH_SCRIPT} php ${PATH_DEPLOY_STAGING}artisan migrate --force

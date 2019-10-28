@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  php:
+    container_name: my_test_php
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    ports:
+      - 8088:80
+    volumes:
+      - .:/var/www
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/public_html
+    tty: true
+    depends_on:
+      - mariadb
+  mariadb:
+    container_name: my_test_maria_db
+    image: mariadb:10.2.24
+    environment:
+      - MYSQL_DATABASE=my_test
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    ports:
+      - 3310:3306
