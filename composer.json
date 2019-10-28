@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": "^7.2",
+        "firebase/php-jwt": "^5.0",
         "laravel/lumen-framework": "^6.0"
     },
     "require-dev": {
@@ -30,7 +31,8 @@
     "scripts": {
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ]
+        ],
+        "tests": "vendor/bin/phpunit --colors=always tests"
     },
     "config": {
         "preferred-install": "dist",

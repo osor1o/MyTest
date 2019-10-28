@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,6 +10,21 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+use Illuminate\Http\RedirectResponse;
+
+$router->post('/user', 'UserController@store');
+$router->post('/auth', 'AuthController@authenticate');
+
+$router->group(['middleware' => 'jwt'],
+    function() use ($router) {
+        $router->get('/user/{id}', 'UserController@show');
+    }
+);
+
+/*
+    [] post - /auth
+    [ok] perfil (informações do usuário);
+    [ok] criarconta (cadastro do usuáro);
+    [] get - /activate/{key} (página que informa que o usuário foi ativado e o direciona para a página
+    de perfil);
+*/

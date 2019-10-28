@@ -18,7 +18,7 @@ services:
     container_name: my_test_maria_db
     image: mariadb:10.2.24
     environment:
-      - MYSQL_DATABASE=my_test
+      - MYSQL_DATABASE=homestead
       - MYSQL_USER=homestead
       - MYSQL_PASSWORD=secret
       - MYSQL_ROOT_PASSWORD=secret

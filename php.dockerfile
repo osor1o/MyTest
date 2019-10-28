@@ -30,3 +30,6 @@ RUN php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
 
 RUN a2enmod rewrite
+
+# Remover lista APT
+RUN rm -rf /var/lib/apt/lists/*
