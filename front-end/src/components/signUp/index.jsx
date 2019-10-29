@@ -45,9 +45,9 @@ export default class SignUp extends Component
 
     handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(' http://geekmcz.com/user')
+        axios.post(' http://geekmcz.com/user', this.state.data)
             .then((response) => console.log(response.data))
-            .catch((response) => console.log(response))
+            .catch((error) => console.log(error.response.data))
     }
 
     renderInput(name, label, type = "text") {
