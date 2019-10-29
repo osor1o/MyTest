@@ -18,30 +18,9 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            $user = $this->storeUser($request);
-            $this->sendEmail($user);
-            DB::commit();
-            return response()->json($user, 201);
-        } catch(Excetion $e) {
-            DB::rollBack();
-            return response()->json([ 'error' => 'Não foi possível finalizar o cadastro.' ], 400);
-        }
-    }
-
-    private function storeUser(Request $request)
-    {
         $data = $request->only([ 'username', 'email', 'name', 'password' ]);
         $user = new User($data);
         $user->save();
-        return $user;   
-    }
-
-    private function sendEmail($user)
-    {
-        if (env('APP_ENV') !== 'testing') {
-            Mail::to($user->email)->send(new AccountActivationCode($user));
-        }
+        return response()->json($user, 201);
     }
 }

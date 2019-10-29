@@ -18,7 +18,8 @@ $router->post('/user', [
 ]);
 
 $router->group([ 'middleware' => 'jwt' ], function() use ($router) {
-    $router->get('activate/{id}/{hash}', 'ActiveController@index');
+    $router->put('active/{id}/{hash}', 'ActiveController@activate');
+    $router->post('active', 'ActivateController@send');
     $router->get('/user/{id}', [
         'middleware' => [ 'active-middleware' ],
         'uses' => 'UserController@show'
