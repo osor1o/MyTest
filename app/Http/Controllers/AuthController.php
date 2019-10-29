@@ -15,7 +15,6 @@ class AuthController extends BaseController
     private $request;
     private $message = [
         "required" => "campo obrigatório.",
-        "email" => "inválido.",
     ];
     
     public function __construct(Request $request)
@@ -37,13 +36,15 @@ class AuthController extends BaseController
     public function authenticate(User $user)
     {
         $this->validate($this->request, [
-            'email'     => 'required|email',
-            'password'  => 'required'
+            'username' => 'required',
+            'password' => 'required'
         ], $this->message);
         
-        $data = $this->request->only(['email', 'password']);
-        
-        $user = User::where('email', $data['email'])
+        $data = $this->request->only(['username', 'password']);
+        $password = md5($data['password']);
+
+        $user = User::where([ 'email' => $data['username'] ])
+            ->orWhere([ 'username' => $data['username'] ])
             ->first();
 
         if ($user && md5($data['password']) === $user->password)

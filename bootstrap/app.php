@@ -21,7 +21,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->withFacades();
+$app->withFacades(true, [
+    'Illuminate\Support\Facades\Mail' => 'Mail',
+]);
 
 $app->withEloquent();
 
@@ -63,6 +65,7 @@ $app->singleton(
 
 $app->routeMiddleware([
     'jwt' => App\Http\Middleware\JwtMiddleware::class,
+    'active-middleware' => App\Http\Middleware\ActiveMiddleware::class,
     'user-validate-middleware' => App\Http\Middleware\UserValidateMiddleware::class
 ]);
 
@@ -80,6 +83,9 @@ $app->routeMiddleware([
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
+
+$app->configure('mail');
 
 /*
 |--------------------------------------------------------------------------

@@ -24,11 +24,11 @@ class JwtMiddleware
         } catch(ExpiredException $e) {
             return response()->json([ 'error' => 'Token expirado.' ], 401);
         } catch(Exception $e) {
-            dd($e);
             return response()->json([ 'error' => 'Token inválido.' ], 401);
         }
 
         $user = User::find($credentials->sub);
+        
         $request->auth = $user;
         return $next($request);
     }

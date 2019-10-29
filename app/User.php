@@ -14,7 +14,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     protected $table = 'User';
     protected $fillable = [ 'email', 'username', 'password', 'name' ];
-    protected $hidden = [ 'password', 'activated' ];
+    protected $hidden = [ 'password' ];
 
     public function setPasswordAttribute($password)
     {

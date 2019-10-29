@@ -3,7 +3,7 @@
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
-require __DIR__.'/Jwt.php';
+require_once __DIR__.'/Jwt.php';
 
 class UserTest extends TestCase
 {
@@ -35,7 +35,7 @@ class UserTest extends TestCase
 
     public function testShowUser()
     {
-        $jwt = Jwt::generate($this->data);
+        $jwt = Jwt::generate();
         $this->get("user/{$jwt->user->id}", $jwt->token)
             ->seeStatusCode(200)
             ->seeJson([
@@ -48,9 +48,17 @@ class UserTest extends TestCase
 
     public function testShowUserNotFound()
     {
-        $jwt = Jwt::generate($this->data);
+        $jwt = Jwt::generate();
         $this->get("user/joaquim", $jwt->token)
             ->seeStatusCode(404);
+    }
+
+    public function testShowUserInactive()
+    {
+        $jwt = Jwt::generateInactive();
+        $this->get("user/1", $jwt->token)
+            ->seeStatusCode(409)
+            ->seeJson([ 'error' => 'Usuário pendente de ativação.' ]);
     }
 
     public function testRequiredFields()
