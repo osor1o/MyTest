@@ -18,7 +18,7 @@ class JwtMiddleware
         if(!$token) {
             return response()->json([ 'error' => 'Token não encontrado.' ], 401);
         }
-
+        
         try {
             $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS256']);
         } catch(ExpiredException $e) {
@@ -26,7 +26,7 @@ class JwtMiddleware
         } catch(Exception $e) {
             return response()->json([ 'error' => 'Token inválido.' ], 401);
         }
-
+        
         $user = User::find($credentials->sub);
         
         $request->auth = $user;

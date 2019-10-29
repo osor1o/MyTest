@@ -19,7 +19,8 @@ class AuthTest extends TestCase
             "name" => "Joaquim da Silva",
             "username" => "joaquim",
             "email" => "joaquim@teste.com",
-            "password" => "Secret123"
+            "password" => "Secret123",
+            "password_confirmation" => "Secret123"
         ];
     }
 

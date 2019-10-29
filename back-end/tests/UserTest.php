@@ -18,7 +18,8 @@ class UserTest extends TestCase
             "name" => "Joaquim da Silva",
             "username" => "joaquim",
             "email" => "joaquim@teste.com",
-            "password" => "Secret123"
+            "password" => "Secret123",
+            "password_confirmation" => "Secret123"
         ];
     }
 
@@ -26,6 +27,7 @@ class UserTest extends TestCase
     {
         $user = $this->data;
         unset($user['password']);
+        unset($user['password_confirmation']);
         $response = $this->post('/user', $this->data)
             ->seeStatusCode(201)
             ->seeJson($user)
@@ -94,7 +96,7 @@ class UserTest extends TestCase
             ]);
     }
 
-    public function textInvalidName()
+    public function testInvalidName()
     {
         $this->data['name'] = 'joaquim1 barros';
         $this->post('/user', $this->data)
@@ -104,20 +106,27 @@ class UserTest extends TestCase
             ]);
     }
 
-    public function invalidPassword()
+    public function testInvalidPassword()
     {
         $this->data['password'] = 'secret123';
         $this->post('/user', $this->data)
             ->seeStatusCode(422)
             ->seeJson([
-                "password" => [ "deve conter pelo menos uma letra minúscula, uma letra maiúscula e números." ]
+                "password" => [
+                    "deve conter pelo menos uma letra minúscula, uma letra maiúscula e números.",
+                    "não estão iguais."
+                ]
             ]);
 
         $this->data['password'] = 'secre';
         $this->post('/user', $this->data)
             ->seeStatusCode(422)
             ->seeJson([
-                "password" => [ "deve conter pelo menos 6 caracteres" ]
+                "password" => [
+                    "deve conter pelo menos 6 caracteres.",
+                    "deve conter pelo menos uma letra minúscula, uma letra maiúscula e números.",
+                    "não estão iguais."
+                ]
             ]);
     }
 }

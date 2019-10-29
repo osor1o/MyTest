@@ -12,7 +12,8 @@ abstract class Jwt
         "name" => "Joaquim da Silva",
         "username" => "joaquim",
         "email" => "joaquim@teste.com",
-        "password" => "Secret123"
+        "password" => "Secret123",
+        "password_confirmation" => "Secret123"
     ];
 
     static public function generate()
