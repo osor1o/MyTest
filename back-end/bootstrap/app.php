@@ -65,7 +65,7 @@ $app->middleware([
 
 $app->routeMiddleware([
     'jwt' => App\Http\Middleware\JwtMiddleware::class,
-    'active-middleware' => App\Http\Middleware\ActiveMiddleware::class,
+    'user-active-middleware' => App\Http\Middleware\UserActiveMiddleware::class,
     'user-validate-middleware' => App\Http\Middleware\UserValidateMiddleware::class
 ]);
 

@@ -13,16 +13,13 @@ class ActiveTest extends TestCase
     public function testActive()
     {
         $jwt = Jwt::generateInactive();
-        $id = $jwt->user->id;
-        $hash = md5($jwt->user->created_at);
-        $this->get("activate/{$id}/{$hash}", $jwt->token)
+        $user = $jwt->user;
+        $id = $user->id;
+        $hash = md5($user->created_at);
+        $user->activated = true;
+        $this->get("user/active/{$id}/{$hash}")
             ->seeStatusCode(200)
-            ->seeJson([
-                'id' => $jwt->user->id,
-                'username' => $jwt->user->username,
-                'email' => $jwt->user->email,
-                'activated' => true
-            ]);
+            ->seeJson($user->toArray());
     }
 
     public function testActiveFail()
@@ -30,8 +27,27 @@ class ActiveTest extends TestCase
         $jwt = Jwt::generate();
         $id = $jwt->user->id;
         $hash = md5($jwt->user->created_at);
-        $this->get("activate/{$id}/{$hash}", $jwt->token)
-            ->seeStatusCode(404)
-            ->seeJson([ 'error' => 'página não encontrada.' ]);
+        $this->get("user/active/{$id}/{$hash}")
+            ->seeStatusCode(410)
+            ->seeJson([ 'error' => 'usuário já está ativo.' ]);
+
+        $this->get("user/active/1/abc")
+            ->seeStatusCode(404);
+    }
+
+    public function testSendEmail()
+    {
+        $jwt = Jwt::generateInactive();
+        $this->get('/user/active/mail', $jwt->token)
+            ->seeStatusCode(200)
+            ->seeJson([ 'message' => 'email enviado com sucesso.' ]);
+    }
+
+    public function testSendEmailFail()
+    {
+        $jwt = Jwt::generate();
+        $this->get('/user/active/mail', $jwt->token)
+            ->seeStatusCode(410)
+            ->seeJson([ 'error' => 'usuário já está ativo.']);
     }
 }

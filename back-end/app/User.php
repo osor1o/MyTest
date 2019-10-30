@@ -20,4 +20,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->attributes['password'] = md5($password);
     }
+
+    public function setUsernameAttribute($username)
+    {
+        $this->attributes['username'] = mb_strtolower($username);
+    }
 }

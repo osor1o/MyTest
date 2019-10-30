@@ -60,7 +60,7 @@ class UserTest extends TestCase
         $jwt = Jwt::generateInactive();
         $this->get("user/1", $jwt->token)
             ->seeStatusCode(409)
-            ->seeJson([ 'error' => 'Usuário pendente de ativação.' ]);
+            ->seeJson([ 'error' => 'usuário pendente de ativação.' ]);
     }
 
     public function testRequiredFields()
@@ -102,7 +102,7 @@ class UserTest extends TestCase
         $this->post('/user', $this->data)
             ->seeStatusCode(422)
             ->seeJson([
-                "name" => [ "apenas letras." ]
+                "name" => [ "nome completo e apenas com letras." ]
             ]);
     }
 
