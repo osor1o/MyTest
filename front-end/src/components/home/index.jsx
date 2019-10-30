@@ -1,19 +1,29 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+
+import { Redirect } from 'react-router-dom'
+import { isAuthenticated } from '../../utils/auth'
+
+import If from '../common/if'
+import { Row, Col } from 'react-bootstrap'
 
 export default class Home extends Component {
     componentDidMount() {
-        document.title = "Perfil"
+        document.title = "Home"
     }
 
     render() {
         return (
-            <>
-                <h2>Home Page</h2>
-                <Link to="criarconta">Criar Conta</Link>
-                <hr/>
-                <Link to="entrar">Entrar</Link>
-            </>
+            <Row>
+                <Col xs={12}>
+                    <h2>Bem Vindo!</h2>
+                </Col>
+                <Col xs={12}>
+                    <p>Aplicação de teste para locadados, cadastre-se e ative sua conta</p>
+                </Col>
+                <If test={ isAuthenticated() }>
+                    <Redirect to='/perfil' />
+                </If>
+            </Row>
         )
     }
 }

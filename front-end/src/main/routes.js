@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import PrivateRoute from './privateRoute'
+import { logOut } from '../utils/auth'
 
 import Home from '../components/home'
 import SignIn from '../components/signIn'
@@ -14,7 +15,9 @@ export default () => (
         <Route exact path='/' component={Home} />
         <Route path='/entrar' component={SignIn} title="Entrar" />
         <Route path='/criarconta' component={SignUp} />
-        <PrivateRoute path='/ativacao/:id/:hash' component={ActiveAccount}  />
+        <Route path='/ativacao/:id/:hash' component={ActiveAccount}  />
         <PrivateRoute path='/perfil' component={Profile} />
+        <Route path='/sair' component={logOut} />
+        <Redirect path="*" to="/" />
     </Switch>
 )

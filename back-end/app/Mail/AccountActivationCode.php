@@ -23,7 +23,7 @@ class AccountActivationCode extends Mailable
     private function generateLink(User $user)
     {
         $hash = md5($user->created_at);
-        $url = url('/activate');
+        $url = "https://osor1o.github.io/MyTest/#ativacao";
         $link = "{$url}/{$user->id}/{$hash}";
         return $link;
     }

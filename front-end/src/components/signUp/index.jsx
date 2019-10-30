@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 
+import { Redirect } from 'react-router-dom'
 import axios from 'axios'
+import { signIn, sendActiveEmail, isAuthenticated } from '../../utils/auth'
+import { BASE_URL } from '../../utils/defaultValues'
 
-import InputLabel from '../common/inputLabel'
-import Alert from '../common/alert'
-import Loading from '../common/loading'
+import { Row, Col, Form, Button, Spinner } from 'react-bootstrap'
+
+import If from '../common/if'
 
 export default class SignUp extends Component
 {
@@ -12,7 +15,6 @@ export default class SignUp extends Component
         title: 'Criar Conta',
         alert: false,
         isLoading: false,
-        disabled: false,
         data: {
             name: '',
             email: '',
@@ -22,6 +24,12 @@ export default class SignUp extends Component
         }
     }
 
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
     componentDidMount() {
         document.title = this.state.title
     }
@@ -29,39 +37,59 @@ export default class SignUp extends Component
     render() {
         const { isLoading } = this.state
         return (
-            <form onSubmit={this.handleSubmit}>
-                <h2>{ this.state.title }</h2>
-
-                <Alert text="Confirmação de senha inválida" />
-                {this.renderInput('name', 'Nome Completo')}
-                {this.renderInput('email', 'Email', 'email')}
-                {this.renderInput('username', 'Nome de Usuário')}
-                {this.renderInput('password', 'Senha', 'password')}
-                {this.renderInput('password_confirmation', 'Confirmar Senha', 'password')}
-                {(isLoading) ? <Loading /> : <button type="submit">Cadastrar</button>}
-            </form>
+            <Row>
+                <Col xs={12}>
+                    <h2>{ this.state.title }</h2>
+                </Col>
+                <Col xs={12}>
+                    <Form onSubmit={this.handleSubmit}>
+                        <If test={ isAuthenticated() }>
+                            <Redirect to='/perfil' />
+                        </If>
+                        {this.renderInput('name', 'Nome Completo')}
+                        {this.renderInput('email', 'Email', 'email')}
+                        {this.renderInput('username', 'Nome de Usuário')}
+                        {this.renderInput('password', 'Senha', 'password')}
+                        {this.renderInput('password_confirmation', 'Confirmar Senha', 'password')}
+                        {(isLoading)
+                            ? <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>
+                            : <Button type="submit">Cadastrar</Button>}
+                    </Form>
+                </Col>
+            </Row>
         )
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        axios.post(' http://geekmcz.com/user', this.state.data)
-            .then((response) => console.log(response.data))
-            .catch((error) => console.log(error.response.data))
+    async handleSubmit(e) {
+        try {
+            e.preventDefault()
+            this.setState({ isLoading: true })
+            const { data } = this.state;
+            await axios.post(`${BASE_URL}/user`, data)
+            await signIn(data)
+            await sendActiveEmail()
+        } catch(e) {
+            console.log(e.response.data);
+        } finally {
+            this.setState({ isLoading: false })
+        }
     }
 
     renderInput(name, label, type = "text") {
-        const { disabled } = this.state
+        const { isLoading } = this.state
         const value = this.state.data[name]
         return (
-            <InputLabel
-                name={ name } label={ label } value={ value } type={ type }
-                onChange={this.handleChange} disabled={ disabled }
-            />
+            <Form.Group controlId={name}>
+                <Form.Label>{ label }</Form.Label>
+                <Form.Control
+                    name={ name } value={ value } type={ type }
+                    onChange={this.handleChange} disabled={ isLoading }
+                />
+            </Form.Group>
         )
     }
 
-    handleChange = (e) => {
+    handleChange(e) {
         const { data } = this.state
         data[e.target.name] = e.target.value
         this.setState({ data })
