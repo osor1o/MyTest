@@ -46,7 +46,7 @@ class SignIn extends Component
                         <Field
                             name='password' type='password' component={LabelAndInput} disabled={isLoading}
                             validate={ required } />
-                        <SubmitButton text="Cadastrar" isLoading={isLoading} />
+                        <SubmitButton text="Entrar" isLoading={isLoading} />
                     </Form>
                 </Col>
             </Row>
