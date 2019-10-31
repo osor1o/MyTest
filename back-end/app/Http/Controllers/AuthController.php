@@ -25,7 +25,7 @@ class AuthController extends BaseController
     static public function generateJwt(User $user)
     {
         $payload = [
-            'iss' => 'lumen-jwt',
+            'iss' => 'MyTest',
             'sub' => $user->id,
             'iat' => time(),
             'exp' => time() + 60*60

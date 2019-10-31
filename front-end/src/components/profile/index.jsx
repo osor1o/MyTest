@@ -4,11 +4,11 @@ import { Redirect } from 'react-router-dom'
 import { isAuthenticated, getToken, parseJwt, logOut } from '../../utils/auth'
 import { BASE_URL } from '../../utils/defaultValues'
 
-import { Row, Col, Spinner, ListGroup, Image } from 'react-bootstrap'
+import { Row, Col, Spinner, ListGroup } from 'react-bootstrap'
 import axios from 'axios'
 
 import If from '../common/if'
-import Avatar from '../../assets/img/avatar.png'
+import Gravatar from '../common/gravatar'
 import ResendEmail from './ResendEmail'
 
 export default class Profile extends Component {
@@ -43,7 +43,7 @@ export default class Profile extends Component {
 
     render() {
         const { isLoading, active } = this.state
-        const { username, email, name } = this.state.data
+        const { username, email, name, gravatar } = this.state.data
         return (
             <Row className="justify-content-between">
                 <If test={ !isLoading }>
@@ -51,9 +51,8 @@ export default class Profile extends Component {
                         <h2>Perfil</h2>
                     </Col>
                     <If test={ active }>
-                        
                         <Col md={3} sm={12} className="text-center mt-3">
-                            <Image src={Avatar} roundedCircle width="150px" height="150px" />
+                            <Gravatar src={gravatar} />
                         </Col>
                         <Col md={9} sm={12} className="mt-3">
                             <ListGroup>
