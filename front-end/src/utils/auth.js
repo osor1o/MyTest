@@ -30,7 +30,6 @@ export async function signIn(data) {
         setToken(token)
         return true
     } catch (e) {
-        console.log(e.response.data)
         removeToken()
         return false
     }

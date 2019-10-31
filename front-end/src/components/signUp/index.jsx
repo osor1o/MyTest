@@ -1,33 +1,24 @@
 import React, { Component } from 'react'
 
 import { Redirect } from 'react-router-dom'
+import { BASE_URL } from '../../utils/defaultValues'
 import axios from 'axios'
 import { signIn, sendActiveEmail, isAuthenticated } from '../../utils/auth'
-import { BASE_URL } from '../../utils/defaultValues'
 
-import { Row, Col, Form, Button, Spinner } from 'react-bootstrap'
+import { Field, reduxForm } from 'redux-form'
+import { required, email, password, minLength, confirmPassword, username, name } from '../../utils/validation'
 
 import If from '../common/if'
+import { Row, Col, Form } from 'react-bootstrap'
+import LabelAndInput from '../common/inputAndLabel'
+import SubmitButton from '../common/submitButton'
+import AlertResponseError from '../common/alertResponseError'
 
-export default class SignUp extends Component
-{
+class SignUp extends Component {
     state = {
         title: 'Criar Conta',
         alert: false,
-        isLoading: false,
-        data: {
-            name: '',
-            email: '',
-            username: '',
-            password: '',
-            password_confirmation: ''
-        }
-    }
-
-    constructor(props) {
-        super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        isLoading: false
     }
 
     componentDidMount() {
@@ -35,63 +26,59 @@ export default class SignUp extends Component
     }
 
     render() {
-        const { isLoading } = this.state
+        const { isLoading, error } = this.state
+        const { handleSubmit } = this.props
         return (
             <Row>
+                <If test={ isAuthenticated() }>
+                    <Redirect to='/perfil' />
+                </If>
                 <Col xs={12}>
                     <h2>{ this.state.title }</h2>
                 </Col>
                 <Col xs={12}>
-                    <Form onSubmit={this.handleSubmit}>
-                        <If test={ isAuthenticated() }>
-                            <Redirect to='/perfil' />
-                        </If>
-                        {this.renderInput('name', 'Nome Completo')}
-                        {this.renderInput('email', 'Email', 'email')}
-                        {this.renderInput('username', 'Nome de Usuário')}
-                        {this.renderInput('password', 'Senha', 'password')}
-                        {this.renderInput('password_confirmation', 'Confirmar Senha', 'password')}
-                        {(isLoading)
-                            ? <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>
-                            : <Button type="submit">Cadastrar</Button>}
+                    <AlertResponseError {...error} />
+                </Col>
+                <Col xs={12}>
+                    <Form onSubmit={handleSubmit(this.submit)}>
+                        <Field
+                            name='name' type='text' component={LabelAndInput} disabled={isLoading} 
+                            validate={[ required, name ]} />
+                        <Field
+                            name='email' type='email' component={LabelAndInput} disabled={isLoading}
+                            validate={[ required, email ]} />
+                        <Field
+                            name='username' type='text' component={LabelAndInput} disabled={isLoading} 
+                            validate={[ required, username ]} />
+                        <Field
+                            name='password' type='password' component={LabelAndInput} disabled={isLoading}
+                            validate={[ required, password, minLength(6), confirmPassword ]} />
+                        <Field
+                            name='password_confirmation' type='password' component={LabelAndInput} disabled={isLoading} 
+                            validate={ required } />
+                        <SubmitButton text="Cadastrar" isLoading={isLoading} />
                     </Form>
                 </Col>
             </Row>
         )
     }
 
-    async handleSubmit(e) {
+    submit = async (data) => {
         try {
-            e.preventDefault()
             this.setState({ isLoading: true })
-            const { data } = this.state;
             await axios.post(`${BASE_URL}/user`, data)
             await signIn(data)
             await sendActiveEmail()
         } catch(e) {
-            console.log(e.response.data);
+            const { data, status } = e.response
+            const error = { data, status }
+            this.setState({ error })
         } finally {
             this.setState({ isLoading: false })
         }
     }
-
-    renderInput(name, label, type = "text") {
-        const { isLoading } = this.state
-        const value = this.state.data[name]
-        return (
-            <Form.Group controlId={name}>
-                <Form.Label>{ label }</Form.Label>
-                <Form.Control
-                    name={ name } value={ value } type={ type }
-                    onChange={this.handleChange} disabled={ isLoading }
-                />
-            </Form.Group>
-        )
-    }
-
-    handleChange(e) {
-        const { data } = this.state
-        data[e.target.name] = e.target.value
-        this.setState({ data })
-    }
 }
+
+export default reduxForm({
+    form: 'signUp'
+})(SignUp)

@@ -20,8 +20,7 @@ export default class SignIn extends Component
         this.setState({ isLoading: true })
         try {
             const { id, hash } = this.props.match.params
-            const response = await axios.get(`${BASE_URL}/user/active/${id}/${hash}`)
-            console.log(response.data)
+            await axios.get(`${BASE_URL}/user/active/${id}/${hash}`)
             this.setState({ isValidHash: true })
         } catch(e) {
             this.setState({ isValidHash: false })

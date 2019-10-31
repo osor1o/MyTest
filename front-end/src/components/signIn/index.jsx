@@ -2,79 +2,68 @@ import React, { Component } from 'react'
 
 import { Redirect } from 'react-router-dom'
 import { signIn, isAuthenticated } from '../../utils/auth'
-import { Form, Button, Spinner } from 'react-bootstrap'
+
+import { Field, reduxForm } from 'redux-form'
+import { required } from '../../utils/validation'
 
 import If from '../common/if'
+import { Row, Col, Form } from 'react-bootstrap'
+import LabelAndInput from '../common/inputAndLabel'
+import SubmitButton from '../common/submitButton'
+import AlertResponseError from '../common/alertResponseError'
 
-
-export default class SignIn extends Component
+class SignIn extends Component
 {
     state = {
         title: 'Entrar',
         alert: false,
-        isLoading: false,
-        data: {
-            username: '',
-            password: ''
-        }
-    }
-
-    constructor(props) {
-        super(props)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        isLoading: false
     }
 
     componentDidMount() {
         document.title = this.state.title
     }
+
     render() {
-        const { isLoading } = this.state
+        const { isLoading, error } = this.state
+        const { handleSubmit } = this.props
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Row>
                 <If test={ isAuthenticated() }>
                     <Redirect to='/perfil' />
                 </If>
-                <h2>Entrar</h2>
-                {this.renderInput('username', 'Nome de Usuário ou Email')}
-                {this.renderInput('password', 'Senha', 'password')}
-                {(isLoading)
-                ? <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>
-                : <Button type="submit">Cadastrar</Button>}
-            </Form>
+                <Col xs={12}>
+                    <h2>{ this.state.title }</h2>
+                </Col>
+                <Col xs={12}>
+                    <AlertResponseError {...error} />
+                </Col>
+                <Col xs={12}>
+                    <Form onSubmit={handleSubmit(this.submit)}>
+                        <Field
+                            name='username' label="Nome de Usuário ou Email" type='text' component={LabelAndInput} disabled={isLoading} 
+                            validate={ required } />
+                        <Field
+                            name='password' type='password' component={LabelAndInput} disabled={isLoading}
+                            validate={ required } />
+                        <SubmitButton text="Cadastrar" isLoading={isLoading} />
+                    </Form>
+                </Col>
+            </Row>
         )
     }
 
-    renderInput(name, label, type = "text") {
-        const { isLoading } = this.state
-        const value = this.state.data[name]
-        return (
-            <Form.Group controlId={name}>
-                <Form.Label>{ label }</Form.Label>
-                <Form.Control
-                    name={ name } value={ value } type={ type }
-                    onChange={this.handleChange} disabled={ isLoading }
-                />
-            </Form.Group>
-        )
-    }
-
-    async handleSubmit(e) {
-        try {
-            e.preventDefault()
-            this.setState({ isLoading: true })
-            const { data } = this.state
-            await signIn(data)
-        } catch(e) {
-            console.log(e.response.data);
-        } finally {
-            this.setState({ isLoading: false })
+    submit = async(data) => {
+        this.setState({ isLoading: true })
+        if(!await signIn(data)) {
+            const data = 'Usuário ou senha inválido.'
+            const error = { data }
+            this.setState({ error })
         }
-    }
-
-    handleChange(e) {
-        const { data } = this.state
-        data[e.target.name] = e.target.value
-        this.setState({ data })
+        this.setState({ isLoading: false })
     }
 }
+
+export default reduxForm({
+    form: 'signIn'
+})(SignIn)

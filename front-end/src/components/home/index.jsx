@@ -18,7 +18,7 @@ export default class Home extends Component {
                     <h2>Bem Vindo!</h2>
                 </Col>
                 <Col xs={12}>
-                    <p>Aplicação de teste para locadados, cadastre-se e ative sua conta</p>
+                    <p>Aplicação de teste para locadados, navegue pelo menu, cadastre-se e ative sua conta</p>
                 </Col>
                 <If test={ isAuthenticated() }>
                     <Redirect to='/perfil' />
