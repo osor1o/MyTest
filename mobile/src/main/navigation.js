@@ -1,9 +1,9 @@
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 
-import Home from './components/home'
-import SignIn from './components/signIn'
-import SignUp from './components/signUp'
+import Home from '../components/home'
+import SignIn from '../components/signIn'
+import SignUp from '../components/signUp'
 
 const drawerNavigator = createDrawerNavigator({
     home: {
@@ -18,6 +18,6 @@ const drawerNavigator = createDrawerNavigator({
         screen: SignUp,
         navigationOptions: { title: 'Criar Conta' }
     }
-}, { drawerWidth: 300 })
+})
 
 export default createAppContainer(drawerNavigator)

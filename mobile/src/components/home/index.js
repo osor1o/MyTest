@@ -1,21 +1,16 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+
+import P from '../common/p'
+import H2 from '../common/h2'
+import { Content, Container } from 'native-base'
+import Header from '../common/header'
 
 export default props => (
-    <View style={style.container}>
-        <Text style={style.font30}>home</Text>
-    </View>
+    <Container>
+        <Header {...props} />
+        <Content padder>
+            <H2>Bem Vindo!</H2>
+            <P>Aplicação de teste para locadados, navegue pelo menu, cadastre-se e ative sua conta</P>
+        </Content>
+    </Container>
 )
-
-const style = StyleSheet.create({
-    container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        fontSize: 50
-    },
-    font30: {
-        fontSize: 30
-    }
-})
