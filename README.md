@@ -9,11 +9,14 @@
 * React (https://reactjs.org)
 * Redux (https://redux.js.org)
 * Redux-Form (https://redux-form.com)
+* React Router (https://github.com/ReactTraining/react-router)
 * React-bootstrap (https://react-bootstrap.github.io)
 * axios (https://github.com/axios/axios)
 
 ### Mobile
 * React Native (https://facebook.github.io/react-native)
-* Native Base (https://nativebase.io)
+* Redux (https://redux.js.org)
+* Redux-Form (https://redux-form.com)
 * React Navigation (https://reactnavigation.org)
+* Native Base (https://nativebase.io)
 * axios (https://github.com/axios/axios)
