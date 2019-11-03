@@ -3,17 +3,22 @@ Aplicação de teste para locadados.
 
 ## Sumário
 * [Informações importantes do Back-end](#informações-importantes-do-back-end)
+* [Arquivos importantes do Back-end](#arquivos-importantes-do-back-end)
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 * [Prints Mobile](#prints-mobile)
 
 ## Informações importantes do Back-end
+* Back-end utiliza autenticação baseada em JWT que expira em 1 hora.
+* Deixei os end-points liberados (CORS) para que possam fazer os testes.
+
+## Arquivos importantes do Back-end
 * [Rotas (end-points)](back-end/routes/web.php)
 * [Testes unitários](back-end/tests)
 
 ## Tecnologias Utilizadas
 
 ### Back-end API com TDD (https://geekmcz.com)
-* Lavel/Lumen (https://lumen.laravel.com)
+* Laravel/Lumen (https://lumen.laravel.com)
 * PHPUnit (https://phpunit.de)
 * JWT (https://jwt.io)
 
