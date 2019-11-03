@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { Spinner } from 'native-base'
+import Loading from './loading'
 import Button from './button'
 
 export default (props) => (
     (props.isLoading)
-    ? <Spinner color='#222' />
+    ? <Loading isLoading={props.isLoading} />
     : <Button { ...props } />
 )

@@ -29,7 +29,7 @@ class SignIn extends Component {
                     <Form>
                         <Field name='username' label='Nome de Usuário ou Email' component={InputAndLabel}
                             validate={ required } />
-                        <Field name='password' component={InputAndLabel}
+                        <Field secureTextEntry={true} name='password' component={InputAndLabel}
                             validate={ required } last />
                     </Form>
                     <SubmitButton

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { reduxForm, Field } from 'redux-form'
 import { required, email, password, minLength, confirmPassword, username, name } from '../../utils/validation'
+import { signUp } from '../../main/navigation/actions'
 
 import { Content, Container, Form } from 'native-base'
 
@@ -12,7 +13,6 @@ import AlertResponseError from '../common/alertResponseError'
 import InputAndLabel from '../common/inputAndLabel'
 import SubmitButton from '../common/submitButton'
 
-import { signUp, sendActiveEmail } from '../../main/navigation/actions'
 
 class SignUp extends Component {
     state = {
@@ -28,20 +28,20 @@ class SignUp extends Component {
                     <AlertResponseError {...error} />
                     <Form>
                         <Field name='name' component={InputAndLabel} disabled={isLoading}
-                            // validate={[ required, name ]}
-                             />
+                            validate={[ required, name ]}
+                        />
                         <Field name='email' component={InputAndLabel} disabled={isLoading}
-                            // validate={[ required, email ]} 
-                            />
+                            validate={[ required, email ]}
+                        />
                         <Field name='username' component={InputAndLabel} disabled={isLoading}
-                            // validate={[ required, username ]} 
-                            />
+                            validate={[ required, username ]}
+                        />
                         <Field name='password' component={InputAndLabel} disabled={isLoading}
-                            // validate={[ required, password, minLength(6), confirmPassword ]}
-                             />
+                            secureTextEntry={true} validate={[ required, password, minLength(6), confirmPassword ]}
+                        />
                         <Field name='password_confirmation' component={InputAndLabel} disabled={isLoading}
-                            // validate={ required } last 
-                            />
+                            secureTextEntry={true} validate={ required } last 
+                        />
                         <SubmitButton
                             isLoading={isLoading}
                             onPress={this.props.handleSubmit(this.submit)}

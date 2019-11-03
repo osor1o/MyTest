@@ -63,7 +63,7 @@ export default class Profile extends Component {
                                     <b>Email</b>: { email }
                                 </ListGroup.Item>
                                 <ListGroup.Item>
-                                    <b>Nome de Usuário:</b>: { username }
+                                    <b>Nome de Usuário:</b> { username }
                                 </ListGroup.Item>
                             </ListGroup>
                         </Col>

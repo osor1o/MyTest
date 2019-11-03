@@ -1,6 +1,7 @@
 import { BASE_URL } from '../../utils/defaultValues'
 import axios from 'axios'
 import AsyncStorage from '@react-native-community/async-storage'
+import { decode as atob } from 'base-64'
 
 export async function login(token) {
     await setToken(token)
@@ -53,12 +54,10 @@ export async function signUp(data) {
 export async function sendActiveEmail() {
     try {
         const token = await getToken()
-        console.log(token)
         const headers = { Authorization: `Bearer ${ token }` }
         await axios.get(`${BASE_URL}/user/active/mail`, { headers })
         return true
     } catch(e) {
-        console.log(e.response.data)
         return false
     }
 }
