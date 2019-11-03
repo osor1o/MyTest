@@ -7,7 +7,7 @@ import { BASE_URL } from './defaultValues'
 const localStorage = window.localStorage
 
 export function isAuthenticated() {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     return Boolean(token);
 };
 
@@ -54,10 +54,10 @@ export async function sendActiveEmail() {
 
 export function parseJwt() {
     const token = getToken()
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
+    const base64Fields = token.split('.')[1];
+    const nomalizebase64 = base64Fields.replace(/-/g, '+').replace(/_/g, '/')
+    const jsonPayload = decodeURIComponent(atob(nomalizebase64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(''))
+    return JSON.parse(jsonPayload)
 };

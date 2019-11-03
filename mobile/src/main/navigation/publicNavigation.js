@@ -1,23 +1,23 @@
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 
-import Home from '../components/home'
-import SignIn from '../components/signIn'
-import SignUp from '../components/signUp'
+import Home from '../../components/home'
+import SignIn from '../../components/signIn'
+import SignUp from '../../components/signUp'
 
 const drawerNavigator = createDrawerNavigator({
-    home: {
+    Home: {
         screen: Home,
-        navigationOptions: { title: 'Home' }
+        navigationOptions: { title: 'Home',  }
     },
-    signIn: {
+    SignIn: {
         screen: SignIn,
-        navigationOptions: { title: 'Entrar' }
+        navigationOptions: { title: 'Entrar', params: { test: 'op.gg' } }
     },
-    signUp: {
+    SignUp: {
         screen: SignUp,
         navigationOptions: { title: 'Criar Conta' }
     }
-})
+}, { initialRouteName: 'Home' })
 
 export default createAppContainer(drawerNavigator)

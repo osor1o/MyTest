@@ -17,7 +17,6 @@ import AlertResponseError from '../common/alertResponseError'
 class SignUp extends Component {
     state = {
         title: 'Criar Conta',
-        alert: false,
         isLoading: false
     }
 

@@ -1,16 +1,14 @@
 import React from 'react'
 
-import P from '../common/p'
-import H2 from '../common/h2'
-import { Content, Container } from 'native-base'
+import { Content, Container, H1, Text } from 'native-base'
 import Header from '../common/header'
 
 export default props => (
     <Container>
         <Header {...props} />
         <Content padder>
-            <H2>Bem Vindo!</H2>
-            <P>Aplicação de teste para locadados, navegue pelo menu, cadastre-se e ative sua conta</P>
+            <H1>Bem Vindo!</H1>
+            <Text>Aplicação de teste para locadados, navegue pelo menu, cadastre-se e ative sua conta</Text>
         </Content>
     </Container>
 )
