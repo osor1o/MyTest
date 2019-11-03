@@ -2,8 +2,13 @@
 Aplicação de teste para locadados.
 
 ## Sumário
+* [Informações importantes do Back-end](#informações-importantes-do-back-end)
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 * [Prints Mobile](#prints-mobile)
+
+## Informações importantes do Back-end
+* [Rotas (end-points)](back-end/routes/web.php)
+* [Testes unitários](back-end/tests)
 
 ## Tecnologias Utilizadas
 
