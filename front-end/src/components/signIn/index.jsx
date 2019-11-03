@@ -16,7 +16,6 @@ class SignIn extends Component
 {
     state = {
         title: 'Entrar',
-        alert: false,
         isLoading: false
     }
 
